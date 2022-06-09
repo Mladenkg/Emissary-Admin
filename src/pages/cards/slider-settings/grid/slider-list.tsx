@@ -223,7 +223,7 @@ export default function SliderList() {
     }
     setAddTaskOpen(true);
   };
-  const onCloseAddSlide = () => {
+  const onCloseAddSlide = (data: any[]) => {
     setSelectedSliderData({
       title: "",
       description: "",
@@ -234,8 +234,9 @@ export default function SliderList() {
       image: "",
     });
     //refresh grid
+    if (data)
+      updateGrid(data);
     setIsEditSlide(false);
-    fetchGridData();
     setAddTaskOpen(false);
   };
 

@@ -20,7 +20,7 @@ interface AddNewSlideProps {
   isEdit: boolean;
   sliderId: number | undefined;
   initialSliderData?: SliderData | null;
-  onCloseAddSlide: () => void;
+  onCloseAddSlide: (data?: any[]) => void;
 }
 
 const AddNewSlide: React.FC<AddNewSlideProps> = ({
@@ -35,7 +35,6 @@ const AddNewSlide: React.FC<AddNewSlideProps> = ({
   const validationSchema = yup.object({
     title: yup
       .string()
-      .required(String(messages["common.validation.requiredField"]))
       .max(100,
         (String([
           messages["common.validation.maxLengthFirstPart"],
@@ -149,13 +148,15 @@ const AddNewSlide: React.FC<AddNewSlideProps> = ({
             if (isEdit) {
               let formData = objectToFormData({
                 ...data,
-                image: imageAsFile
+                image: imageAsFile,
+                _method: "PUT"
               });
               jwtAxios
-                .put(`/admin/sliders/${String(sliderId)}`, formData)
+                .post(`/admin/sliders/${String(sliderId)}`, formData)
                 .then((response) => {
                   if (response.status === 200) {
-                    onCloseAddSlide();
+                    setSubmitting(false);
+                    onCloseAddSlide(response.data.data);
                   } else {
                     console.error("Update slide");
                   }
@@ -164,15 +165,27 @@ const AddNewSlide: React.FC<AddNewSlideProps> = ({
                   console.error("Update slide", error);
                 });
             } else {
-              dispatch(onAddNewSlide({
+              let formData = objectToFormData({
                 ...data,
                 image: imageAsFile
-              }));
+              });
+              jwtAxios
+                .post("/admin/sliders", formData)
+                .then((response) => {
+                  if (response.status === 200) {
+                    setSubmitting(false);
+                    onCloseAddSlide(response.data.data);
+                  } else {
+                    console.error("Update slide");
+                  }
+                })
+                .catch((error) => {
+                  console.error("Update slide", error);
+                });
             }
             onCloseAddSlide();
             resetAllValues();
             resetForm();
-            setSubmitting(false);
           }}
         >
           {({ isSubmitting, values }) => (
