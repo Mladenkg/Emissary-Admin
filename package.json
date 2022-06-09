@@ -1,5 +1,4 @@
 {
-  "homepage": "https://mladenkg.github.io/Emissary-Admin",
   "name": "emissary-admin",
   "version": "0.1.0",
   "private": true,
@@ -102,8 +101,6 @@
     "yup": "^0.32.9"
   },
   "scripts": {
-    "predeploy": "npm run build",
-    "deploy": "gh-pages -d build",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
@@ -143,7 +140,6 @@
     "@typescript-eslint/eslint-plugin": "^5.21.0",
     "@typescript-eslint/parser": "^5.21.0",
     "css-loader": "^6.7.1",
-    "gh-pages": "^4.0.0",
     "style-loader": "^3.3.1",
     "tsconfig-paths": "^4.0.0",
     "typescript-eslint-parser": "^22.0.0"
