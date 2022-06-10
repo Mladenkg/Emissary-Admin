@@ -1,12 +1,13 @@
 import React, { useCallback, useEffect, useState } from "react";
 import jwtAxios from "@crema/services/auth/jwt-auth";
 import EditCategory from "../edit-category";
+import PreviewCategory from "../preview-category"
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { Box, IconButton } from "@mui/material";
 import ArrowUpIcon from "@mui/icons-material/ArrowCircleUp";
 import ArrowDownIcon from "@mui/icons-material/ArrowCircleDown";
-import { EditRounded } from "@mui/icons-material";
-import { PopularCategoriesData } from "../../../../types/models/PopularCategories";
+import { EditRounded, VisibilityRounded } from "@mui/icons-material";
+import { PopularCategoryData } from "../../../../types/models/PopularCategories";
 
 const columns: GridColDef[] = [
   {
@@ -38,15 +39,20 @@ const columns: GridColDef[] = [
   },
   {
     field: "edit",
-    headerName: "",
+    headerName: "Actions",
     sortable: false,
-    width: 46,
+    width: 88,
     renderCell: (params) => {
       return (
         <Box sx={{ p: 0, mx: -1 }} >
           <IconButton
-            data-category-action-name="action-edit"
+            data-category-action-name="action-view"
             sx={{ p: 2, mx: 0 }} >
+            <VisibilityRounded />
+          </IconButton>
+          <IconButton
+            data-category-action-name="action-edit"
+            sx={{ p: 2, mx: -1 }} >
             <EditRounded />
           </IconButton>
         </Box >
@@ -104,7 +110,7 @@ export default function CategoryList() {
   }, [fetchGridData]);
 
   const [isEditCategoryOpen, setIsEditCategoryOpen] = useState<boolean>(false);
-  const [selectedPopularCategoriesData, setSelectedPopularCategoriesData] = useState<PopularCategoriesData | null>({
+  const [selectedPopularCategoryData, setSelectedPopularCategoryData] = useState<PopularCategoryData | null>({
     title: "",
     action: "",
     image: ""
@@ -112,11 +118,30 @@ export default function CategoryList() {
 
   const [categoryId, setCategoryId] = useState<number | undefined>(undefined);
 
+  const [isCategoryPreviewOpen, setIsCategoryPreviewOpen] = useState<boolean>(false);
+  const onOpenViewCategory = (rowIndex: number | undefined) => {
+    var record = data[rowIndex].content;
+    setSelectedPopularCategoryData({
+      title: record.title || "",
+      action: record.action || "",
+      image: record.image || ""
+    });
+    setIsCategoryPreviewOpen(true);
+  };
+  const onCloseCategoryPreview = () => {
+    setSelectedPopularCategoryData({
+      title: "",
+      action: "",
+      image: ""
+    });
+    setIsCategoryPreviewOpen(false);
+  };
+
   const onOpenEditCategory = (rowIndex: number | undefined) => {
     if (rowIndex !== undefined) {
       setCategoryId(data[rowIndex].id);
       var record = data[rowIndex].content;
-      setSelectedPopularCategoriesData({
+      setSelectedPopularCategoryData({
         title: record.title || "",
         action: record.action || "",
         image: record.image || ""
@@ -126,7 +151,7 @@ export default function CategoryList() {
   };
 
   const onCloseEditCategory = (data: any[]) => {
-    setSelectedPopularCategoriesData({
+    setSelectedPopularCategoryData({
       title: "",
       action: "",
       image: ""
@@ -177,6 +202,9 @@ export default function CategoryList() {
         case "down":
           handleUpdateRows(rowIndex, categoryId, action);
           break;
+        case "view":
+          onOpenViewCategory(rowIndex);
+          break;
         case "edit":
           onOpenEditCategory(rowIndex);
           break;
@@ -202,8 +230,12 @@ export default function CategoryList() {
       <EditCategory
         isEditCategoryOpen={isEditCategoryOpen}
         categoryId={categoryId}
-        initialPopularCategoriesData={selectedPopularCategoriesData}
+        initialPopularCategoryData={selectedPopularCategoryData}
         onCloseEditCategory={onCloseEditCategory} />
+      <PreviewCategory
+        isCategoryPreviewOpen={isCategoryPreviewOpen}
+        initialPopularCategoryData={selectedPopularCategoryData}
+        onCloseCategoryPreview={onCloseCategoryPreview} />
     </>
   );
 }

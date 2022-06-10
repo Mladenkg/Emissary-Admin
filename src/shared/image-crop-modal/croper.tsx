@@ -55,7 +55,7 @@ export const ImageCropModal: React.FC<ImageCropModalProps> = ({
 
   const onCompleteHandler = () => {
     if (!image || !crop) {
-      console.error("Error");
+      console.error("Cropper Error");
       return;
     }
 
@@ -74,7 +74,7 @@ export const ImageCropModal: React.FC<ImageCropModalProps> = ({
     const ctx = canvas.getContext("2d");
 
     if (!ctx) {
-      console.error("Error");
+      console.error("Cropper Error");
       return;
     }
 
@@ -93,7 +93,7 @@ export const ImageCropModal: React.FC<ImageCropModalProps> = ({
     canvas.toBlob(
       (blob) => {
         if (!blob) {
-          console.error("Error");
+          console.error("Cropper Error");
           return;
         }
         setImageField(blob);

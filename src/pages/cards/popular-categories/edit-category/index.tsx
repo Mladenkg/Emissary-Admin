@@ -9,21 +9,21 @@ import { getDotEnvConfiguration } from "../../../../config";
 
 import AppDialog from "@crema/core/AppDialog";
 import EditCategoryForm from "./category-form";
-import { PopularCategoriesData } from "../../../../types/models/PopularCategories";
+import { PopularCategoryData } from "../../../../types/models/PopularCategories";
 import { CATEGORY_IMAGE_PLACEHOLDER } from "../../../../config/common/category-image";
 import ImageCropModal from "../../../../shared/image-crop-modal";
 
 interface EditCategoryProps {
   isEditCategoryOpen: boolean;
   categoryId: number | undefined;
-  initialPopularCategoriesData?: PopularCategoriesData | null;
+  initialPopularCategoryData?: PopularCategoryData | null;
   onCloseEditCategory: (data?: any[]) => void;
 }
 
 const EditCategory: React.FC<EditCategoryProps> = ({
   isEditCategoryOpen,
   categoryId,
-  initialPopularCategoriesData,
+  initialPopularCategoryData,
   onCloseEditCategory,
 }) => {
   const { messages } = useIntl();
@@ -57,15 +57,15 @@ const EditCategory: React.FC<EditCategoryProps> = ({
   const [imageUrl, setImageUrl] = useState<string | undefined>(undefined);
   const [imageAsFile, saveImageAsFile] = useState<File | null>(null);
   const [previewImage, setPreviewImage] = useState(
-    initialPopularCategoriesData && initialPopularCategoriesData.image !== "" ?
-      baseUrl.concat(initialPopularCategoriesData.image) :
+    initialPopularCategoryData && initialPopularCategoryData.image !== "" ?
+      baseUrl.concat(initialPopularCategoryData.image) :
       CATEGORY_IMAGE_PLACEHOLDER); // TODO handle this to execute only once (first time rendered) somehow -istevanovic
   useEffect(() => {
     setPreviewImage(
-      initialPopularCategoriesData && initialPopularCategoriesData.image ?
-        baseUrl.concat(initialPopularCategoriesData.image) :
+      initialPopularCategoryData && initialPopularCategoryData.image ?
+        baseUrl.concat(initialPopularCategoryData.image) :
         CATEGORY_IMAGE_PLACEHOLDER);
-  }, [baseUrl, initialPopularCategoriesData]);
+  }, [baseUrl, initialPopularCategoryData]);
 
   const setImageField = (file: File | undefined) => {
     if (file && typeof file.name === 'undefined') {
@@ -116,7 +116,7 @@ const EditCategory: React.FC<EditCategoryProps> = ({
         <Formik
           validateOnChange={true}
           enableReinitialize={true}
-          initialValues={initialPopularCategoriesData}
+          initialValues={initialPopularCategoryData}
           validationSchema={validationSchema}
           onSubmit={(data, { setSubmitting, resetForm }) => {
             setSubmitting(true);
