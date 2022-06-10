@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { Formik } from "formik";
 import * as yup from "yup";
@@ -87,20 +87,19 @@ const AddNewSlide: React.FC<AddNewSlideProps> = ({
   const [isParentModalVisible, setIsParentModalVisible] = useState<boolean>(true);
 
   const { baseUrl } = getDotEnvConfiguration();
-
   const [imageUrl, setImageUrl] = useState<string | undefined>(undefined);
-  const [previewImage, setPreviewImage] = useState(isEdit && initialSliderData && initialSliderData.image !== "" ? baseUrl.concat(initialSliderData.image) : SLIDER_IMAGE_PLACEHOLDER);
   const [imageAsFile, saveImageAsFile] = useState<File | null>(null);
-
-
-
-  const startImageCrop = useCallback(
-    (file: File | undefined) => {
-      //set image on cropper and open it
-      setImageUrl(URL.createObjectURL(file));
-      setIsParentModalVisible(false);
-      setShowCropModal(true);
-    }, []);
+  const [previewImage, setPreviewImage] = useState(
+    isEdit && initialSliderData && initialSliderData.image !== "" ?
+      baseUrl.concat(initialSliderData.image) :
+      SLIDER_IMAGE_PLACEHOLDER); // TODO handle this to execute only once (first time rendered) somehow -istevanovic
+  useEffect(() => {
+    if (isEdit)
+      setPreviewImage(
+        initialSliderData && initialSliderData.image ?
+          baseUrl.concat(initialSliderData.image) :
+          SLIDER_IMAGE_PLACEHOLDER);
+  }, [isEdit, initialSliderData, baseUrl]);
 
   const setImageField = (file: File | undefined) => {
     if (file && typeof file.name === 'undefined') {
@@ -108,6 +107,15 @@ const AddNewSlide: React.FC<AddNewSlideProps> = ({
       setPreviewImage(URL.createObjectURL(file));
     }
   };
+  const startImageCrop = useCallback(
+    (file: File | undefined) => {
+      //set image on cropper and open it
+      setImageUrl(URL.createObjectURL(file));
+      // setIsParentModalVisible(false);
+      setShowCropModal(true);
+    }, []);
+
+
 
   const resetAllValues = () => {
     if (previewImage) {
@@ -132,8 +140,9 @@ const AddNewSlide: React.FC<AddNewSlideProps> = ({
       />
       <AppDialog
         dividers
-        fullHeight={true}
         maxWidth="md"
+        height="590px"
+        width="800px"
         open={isAddNewSlideOpen && isParentModalVisible}
         onClose={resetAllValues}
         title={<IntlMessages id="sliderSettings.form.addEditTitle" />}
@@ -141,7 +150,7 @@ const AddNewSlide: React.FC<AddNewSlideProps> = ({
         <Formik
           validateOnChange={true}
           enableReinitialize={true}
-          initialValues={initialSliderData}
+          initialValues={initialSliderData} // TODO handle when opening Cropper due to setShowParent on Crop Component
           validationSchema={validationSchema}
           onSubmit={(data, { setSubmitting, resetForm }) => {
             setSubmitting(true);

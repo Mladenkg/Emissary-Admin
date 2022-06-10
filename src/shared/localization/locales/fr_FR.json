@@ -725,6 +725,8 @@
   "common.validation.maxLengthFirstPart": "Content of this field may not be longer than",
   "common.validation.maxLengthSecondPart": "characters!",
   "common.validation.requiredField": "This is a required field!",
+  "sliderSettings.sliderSettingsTitle": "Slider Settings",
+  "sliderSettings.sliderSettingsDescription": "Use this page to manage slides. You need at least 1 and maximum 5 slides.",
   "sliderSettings.addNewSlider": "Add New Slide",
   "sliderSettings.atLeastOneSlide": "You need to add at least one slide!",
   "sliderSettings.form.addEditTitle": "Add or edit slider",

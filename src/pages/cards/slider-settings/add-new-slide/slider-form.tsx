@@ -2,74 +2,64 @@ import React from "react";
 import { alpha, Box, Button } from "@mui/material";
 import { Form } from "formik";
 import Grid from "@mui/material/Grid";
-import CardMedia from '@mui/material/CardMedia';
-import AddAPhotoIcon from '@mui/icons-material/AddAPhoto';
+import CardMedia from "@mui/material/CardMedia";
+import AddAPhotoIcon from "@mui/icons-material/AddAPhoto";
 import { useDropzone } from "react-dropzone";
 import { ACCEPTABLE_IMAGE_FORMATS, MAX_IMAGE_SIZE } from "../../../../config/common/slider-image";
-import Divider from "@mui/material/Divider";
 import { useIntl } from "react-intl";
 import AppGridContainer from "@crema/core/AppGridContainer";
 import AppTextField from "@crema/core/AppFormComponents/AppTextField";
 import { Fonts } from "../../../../shared/constants/AppEnums";
 import { styled } from "@mui/material/styles";
 
-const StyledDivider = styled(Divider)(({ theme }) => ({
-  marginTop: 4,
-  marginBottom: 16,
-  [theme.breakpoints.up("xl")]: {
-    marginTop: 32,
-    marginBottom: 32,
-  },
-}));
 const HeaderWrapper = styled("div")(({ theme }) => {
   return {
-    padding: 20,
+    alignItems: "center",
+    borderBottom: `1px solid ${theme.palette.divider}`,
+    display: "flex",
+    flexDirection: "column",
     marginLeft: -24,
     marginRight: -24,
     marginTop: -20,
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    borderBottom: `1px solid ${theme.palette.divider}`,
+    padding: 20,
     "& .dropzone": {
       outline: 0,
       "&:hover .edit-icon, &:focus .edit-icon": {
-        display: "flex",
-      },
-    },
+        display: "flex"
+      }
+    }
   };
 });
+
 const AvatarViewWrapper = styled("div")(({ theme }) => {
   return {
     position: "relative",
     cursor: "pointer",
     "& .edit-icon": {
-      position: "absolute",
-      bottom: 5,
-      right: 5,
-      zIndex: 1,
-      border: `solid 2px ${theme.palette.background.paper}`,
-      backgroundColor: alpha(theme.palette.background.paper, 0.7),
-      borderRadius: "50%",
-      width: 46,
-      height: 46,
-      display: "none",
       alignItems: "center",
+      backgroundColor: alpha(theme.palette.background.paper, 0.7),
+      border: `solid 2px ${theme.palette.background.paper}`,
+      borderRadius: "50%",
+      bottom: 5,
+      display: "none",
+      height: 46,
       justifyContent: "center",
+      position: "absolute",
+      right: 5,
       transition: "all 0.4s ease",
+      width: 46,
+      zIndex: 1,
       "& .MuiSvgIcon-root": {
-        fontSize: 30,
-      },
-    },
+        fontSize: 30
+      }
+    }
   };
 });
 
 interface SliderFormProps {
   values: any;
   imageUrl: string,
-
   startImageCrop: (image: File | undefined) => void;
-
   isSubmitting: boolean;
 }
 
@@ -84,7 +74,7 @@ const SliderForm: React.FC<SliderFormProps> = ({
 
   const { getRootProps, getInputProps } = useDropzone({
     accept: ACCEPTABLE_IMAGE_FORMATS,
-    maxSize: MAX_IMAGE_SIZE, // handle after cropping -istevanovic
+    maxSize: MAX_IMAGE_SIZE, // TODO handle after cropping -istevanovic
     onDrop: (acceptedFiles) => {
       if (acceptedFiles && acceptedFiles.length) {
         startImageCrop(acceptedFiles[0]);
@@ -92,19 +82,18 @@ const SliderForm: React.FC<SliderFormProps> = ({
       else {
         //warrning for image problems
       }
-    },
-
+    }
   });
 
   return (
     <>
       <Form
         style={{
-          width: "100%",
+          height: "80%",
+          width: "100%"
         }}
         noValidate
-        autoComplete="off"
-      >
+        autoComplete="off" >
         <AppGridContainer sx={{ pt: 1 }} spacing={5}>
           <Grid item xs={12} md={6}>
             <HeaderWrapper sx={{ border: 0 }}>
@@ -156,8 +145,7 @@ const SliderForm: React.FC<SliderFormProps> = ({
             }}
             rows="5"
             variant="outlined"
-            label={messages["sliderSettings.form.description"] as string}
-          />
+            label={messages["sliderSettings.form.description"] as string} />
         </Box>
         <AppGridContainer spacing={5} sx={{ pb: 5 }}>
           <Grid item xs={12} md={6}>
@@ -169,8 +157,7 @@ const SliderForm: React.FC<SliderFormProps> = ({
                 color: "text.primary",
               }}
               variant="outlined"
-              label={messages["sliderSettings.form.button1Name"] as string}
-            />
+              label={messages["sliderSettings.form.button1Name"] as string} />
           </Grid>
           <Grid item xs={12} md={6}>
             <AppTextField
@@ -181,11 +168,10 @@ const SliderForm: React.FC<SliderFormProps> = ({
                 color: "text.primary",
               }}
               variant="outlined"
-              label={messages["sliderSettings.form.button1Action"] as string}
-            />
+              label={messages["sliderSettings.form.button1Action"] as string} />
           </Grid>
         </AppGridContainer>
-        <AppGridContainer spacing={5} sx={{ pb: 5 }}>
+        <AppGridContainer spacing={5} sx={{ pb: 6 }}>
           <Grid item xs={12} md={6}>
             <AppTextField
               name="button_2_name"
@@ -195,8 +181,7 @@ const SliderForm: React.FC<SliderFormProps> = ({
                 color: "text.primary",
               }}
               variant="outlined"
-              label={messages["sliderSettings.form.button2Name"] as string}
-            />
+              label={messages["sliderSettings.form.button2Name"] as string} />
           </Grid>
           <Grid item xs={12} md={6}>
             <AppTextField
@@ -207,11 +192,9 @@ const SliderForm: React.FC<SliderFormProps> = ({
                 color: "text.primary",
               }}
               variant="outlined"
-              label={messages["sliderSettings.form.button2Action"] as string}
-            />
+              label={messages["sliderSettings.form.button2Action"] as string} />
           </Grid>
         </AppGridContainer>
-        <StyledDivider />
         <div style={{ textAlign: "right" }}>
           <Button
             sx={{
@@ -221,14 +204,12 @@ const SliderForm: React.FC<SliderFormProps> = ({
             color="primary"
             variant="outlined"
             disabled={isSubmitting}
-            type="submit"
-          >
+            type="submit" >
             {messages["common.save"] as string}
           </Button>
         </div>
       </Form>
     </>
-
   );
 };
 

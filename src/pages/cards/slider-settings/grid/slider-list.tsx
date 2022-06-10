@@ -3,6 +3,7 @@ import { useDispatch } from "react-redux";
 import jwtAxios from "@crema/services/auth/jwt-auth";
 import IntlMessages from "@crema/utility/IntlMessages";
 import AddNewSlide from "../add-new-slide";
+import PreviewSlide from "../preview-slide";
 import { onDeleteSlide } from "../../../../redux/actions";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { Box, Button, Card, Typography, IconButton } from "@mui/material";
@@ -20,22 +21,20 @@ const columns: GridColDef[] = [
     width: 96,
     renderCell: (params) => {
       return (
-        <Box sx={{ p: 0, mx: 0, fontWeight: 'medium', fontSize: 14 }} >
-          <span style={{ display: "inline-block", width: "6px", }}>
+        <Box sx={{ p: 0, mx: 0, fontWeight: "medium", fontSize: 14 }} >
+          <span style={{ display: "inline-block", width: "6px", }} >
             {params.row.position}
           </span>
           <IconButton
             disabled={params.row.position === 1}
             data-slide-action-name="action-up"
-            sx={{ p: 2, mx: 0 }}
-          >
+            sx={{ p: 2, mx: 0 }} >
             <ArrowUpIcon />
           </IconButton>
           <IconButton
             data-slide-action-name="action-down"
             disabled={params.row.last}
-            sx={{ p: 2, mx: -2 }}
-          >
+            sx={{ p: 2, mx: -2 }} >
             <ArrowDownIcon />
           </IconButton>
         </Box>
@@ -43,8 +42,8 @@ const columns: GridColDef[] = [
     }
   },
   {
-    field: 'ations',
-    headerName: 'Actions',
+    field: "ations",
+    headerName: "Actions",
     sortable: false,
     width: 116,
     renderCell: (params) => {
@@ -52,25 +51,22 @@ const columns: GridColDef[] = [
         <Box sx={{ p: 0, mx: -1 }} >
           <IconButton
             data-slide-action-name="action-view"
-            sx={{ p: 2, mx: 0 }}
-          >
+            sx={{ p: 2, mx: 0 }} >
             <VisibilityRounded />
           </IconButton>
           <IconButton
             data-slide-action-name="action-edit"
-            sx={{ p: 2, mx: -2 }}
-          >
+            sx={{ p: 2, mx: -2 }} >
             <EditRounded />
           </IconButton>
           <IconButton
             data-slide-action-name="action-delete"
-            sx={{ p: 2, mx: 0 }}
-          >
+            sx={{ p: 2, mx: 0 }} >
             <DeleteForeverRounded />
           </IconButton>
         </Box >
       );
-    },
+    }
   },
   {
     field: "title",
@@ -80,7 +76,7 @@ const columns: GridColDef[] = [
     sortable: false,
     valueGetter: (params) => {
       return params.row.content.title;
-    },
+    }
   },
   {
     field: "description",
@@ -90,7 +86,7 @@ const columns: GridColDef[] = [
     flex: 0.7,
     valueGetter: (params) => {
       return params.row.content.description;
-    },
+    }
   },
   {
     field: "button_1_name",
@@ -99,7 +95,7 @@ const columns: GridColDef[] = [
     width: 150,
     valueGetter: (params) => {
       return params.row.content.button_1_name;
-    },
+    }
   },
   {
     field: "button_1_action",
@@ -109,7 +105,7 @@ const columns: GridColDef[] = [
     width: 100,
     valueGetter: (params) => {
       return params.row.content.button_1_action;
-    },
+    }
   },
   {
     field: "button_2_name",
@@ -119,7 +115,7 @@ const columns: GridColDef[] = [
     width: 150,
     valueGetter: (params) => {
       return params.row.content.button_2_name;
-    },
+    }
   },
   {
     field: "button_2_action",
@@ -130,8 +126,8 @@ const columns: GridColDef[] = [
     width: 100,
     valueGetter: (params) => {
       return params.row.content.button_2_action;
-    },
-  },
+    }
+  }
 ];
 export function CustomNoRowsOverlay() {
   return (
@@ -142,8 +138,7 @@ export function CustomNoRowsOverlay() {
         textAlign: "center",
         color: "inherit",
         backgroundColor: (theme) => theme.palette.background.default,
-      }}
-    >
+      }} >
       <Typography
         sx={{
           overflow: "hidden",
@@ -152,8 +147,7 @@ export function CustomNoRowsOverlay() {
           fontSize: 18,
           fontWeight: "bold",
           color: (theme) => theme.palette.grey[400]
-        }}
-      >
+        }} >
         <IntlMessages id="sliderSettings.atLeastOneSlide" />
       </Typography>
     </Card>
@@ -189,7 +183,7 @@ export default function SliderList() {
     fetchGridData();
   }, [fetchGridData]);
 
-  const [isAddNewSlideOpen, setAddTaskOpen] = useState<boolean>(false);
+  const [isAddNewSlideOpen, setIsAddNewSlideOpen] = useState<boolean>(false);
   const [isEditSlide, setIsEditSlide] = useState<boolean>(false);
   const [selectedSliderData, setSelectedSliderData] = useState<SliderData | null>({
     title: "",
@@ -198,13 +192,38 @@ export default function SliderList() {
     button_1_action: "",
     button_2_name: "",
     button_2_action: "",
-    image: "",
+    image: ""
   });
+
   const [sliderId, setSliderId] = useState<number | undefined>(undefined);
 
-
+  const [isSlidePreviewOpen, setIsSlidePreviewOpen] = useState<boolean>(false);
   const onOpenViewSlide = (rowIndex: number | undefined) => {
+    var record = data[rowIndex].content;
+    setSelectedSliderData({
+      title: record.title || "",
+      description: record.description || "",
+      button_1_name: record.button_1_name || "",
+      button_1_action: record.button_1_action || "",
+      button_2_name: record.button_2_name || "",
+      button_2_action: record.button_2_action || "",
+      image: record.image || ""
+    });
+    setIsSlidePreviewOpen(true);
   };
+  const onCloseSlidePreview = () => {
+    setSelectedSliderData({
+      title: "",
+      description: "",
+      button_1_name: "",
+      button_1_action: "",
+      button_2_name: "",
+      button_2_action: "",
+      image: ""
+    });
+    setIsSlidePreviewOpen(false);
+  };
+
 
   const onOpenAddEditSlide = (rowIndex: number | undefined) => {
     if (rowIndex !== undefined) {
@@ -218,11 +237,13 @@ export default function SliderList() {
         button_1_action: record.button_1_action || "",
         button_2_name: record.button_2_name || "",
         button_2_action: record.button_2_action || "",
-        image: record.image || "",
+        image: record.image || ""
       });
     }
-    setAddTaskOpen(true);
+    setIsAddNewSlideOpen(true);
   };
+
+
   const onCloseAddSlide = (data: any[]) => {
     setSelectedSliderData({
       title: "",
@@ -231,13 +252,13 @@ export default function SliderList() {
       button_1_action: "",
       button_2_name: "",
       button_2_action: "",
-      image: "",
+      image: ""
     });
     //refresh grid
     if (data)
       updateGrid(data);
     setIsEditSlide(false);
-    setAddTaskOpen(false);
+    setIsAddNewSlideOpen(false);
   };
 
   const [disabledAddNewSlide, setDisabledAddNewSlide] = useState<boolean>(false);
@@ -265,7 +286,7 @@ export default function SliderList() {
   const [gridUpading, setGridUpading] = useState<boolean>(false);
   const handleUpdateRows = (rowIndex: number, sliderId: string, action: string) => {
     setData((data) => {
-      let newPosition = action === 'up' ? rowIndex - 1 : rowIndex + 1;
+      let newPosition = action === "up" ? rowIndex - 1 : rowIndex + 1;
       if (newPosition !== -1 && newPosition < data.length && !gridUpading) {
         let formData = {
           position: newPosition + 1
@@ -332,8 +353,7 @@ export default function SliderList() {
           columns={columns}
           pageSize={10}
           rowsPerPageOptions={[]}
-          hideFooter={true}
-        />
+          hideFooter={true} />
         <Box sx={{ p: 2, mx: 5 }}>
           <Box component="div" sx={{ display: "inline" }}>
             <Button
@@ -346,11 +366,10 @@ export default function SliderList() {
                 borderRadius: 1,
                 "& .MuiSvgIcon-root": {
                   fontSize: 24,
-                },
+                }
               }}
               startIcon={<AddIcon />}
-              onClick={() => onOpenAddEditSlide(undefined)}
-            >
+              onClick={() => onOpenAddEditSlide(undefined)} >
               <IntlMessages id="sliderSettings.addNewSlider" />
             </Button>
           </Box>
@@ -358,7 +377,7 @@ export default function SliderList() {
             <Box component="div" sx={{
               pl: 6,
               display: "inline", color: (theme) => theme.palette.warning.main
-            }}>
+            }} >
               <IntlMessages id="sliderSettings.form.maxNumberOfSlidesReached" />
             </Box>
           ) : null}
@@ -369,8 +388,11 @@ export default function SliderList() {
         isEdit={isEditSlide}
         sliderId={sliderId}
         initialSliderData={selectedSliderData}
-        onCloseAddSlide={onCloseAddSlide}
-      />
+        onCloseAddSlide={onCloseAddSlide} />
+      <PreviewSlide
+        isSlidePreviewOpen={isSlidePreviewOpen}
+        initialSliderData={selectedSliderData}
+        onCloseSlidePreview={onCloseSlidePreview} />
     </>
   );
 }

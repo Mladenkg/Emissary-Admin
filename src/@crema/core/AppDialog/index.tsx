@@ -30,6 +30,8 @@ interface AppDialogProps {
   hideClose?: boolean;
   fullHeight?: boolean;
   actionTitle?: string;
+  height?: string;
+  width?: string;
   sxStyle?: SxProps<Theme>;
 }
 
@@ -43,13 +45,20 @@ const AppDialog: React.FC<AppDialogProps> = ({
   dividers = false,
   title,
   actionTitle,
+  height,
+  width,
   fullHeight = false,
 }) => {
   return (
     <Dialog
       sx={{
+        dialogPaper: {
+          height: height ? height : "100%",
+          width: width ? width : "100%",
+        },
         "& .MuiDialog-paper": {
-          width: "100%",
+          height: height ? height : "100%",
+          width: width ? width : "100%",
         },
         "& .MuiDialogContent-root": {
           overflowY: "hidden",
@@ -87,7 +96,12 @@ const AppDialog: React.FC<AppDialogProps> = ({
           </IconButton>
         )}
       </DialogTitle>
-      <DialogContent dividers={dividers}>
+      <DialogContent 
+       sx={{
+        m: 0,
+        height: "80%"
+      }}
+      dividers={dividers}>
         <AppScrollbar
           sx={{
             paddingTop: 1,
