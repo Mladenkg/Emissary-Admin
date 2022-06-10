@@ -1,5 +1,5 @@
 export interface SliderData {
-  title: string;
+  title?: string;
   description?: string;
   button_1_name?: string;
   button_1_action?: string;

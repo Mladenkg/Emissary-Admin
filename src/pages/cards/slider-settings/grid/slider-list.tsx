@@ -110,7 +110,6 @@ const columns: GridColDef[] = [
   {
     field: "button_2_name",
     headerName: "Button 2 Name",
-    description: "This column has a value getter and is n.",
     sortable: false,
     width: 150,
     valueGetter: (params) => {

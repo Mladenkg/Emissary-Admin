@@ -1,7 +1,7 @@
 import React from "react";
 
 const SliderSettings = React.lazy(() => import("./slider-settings"));
-const Page2 = React.lazy(() => import("./Page2"));
+const PopularCategories = React.lazy(() => import("./popular-categories"));
 const Page3 = React.lazy(() => import("./Page3"));
 const Page4 = React.lazy(() => import("./Page4"));
 const Page5 = React.lazy(() => import("./Page5"));
@@ -23,8 +23,8 @@ export const cardPagesConfigs = [
     element: <SliderSettings />,
   },
   {
-    path: "/card/page-2",
-    element: <Page2 />,
+    path: "/card/popular-categories",
+    element: <PopularCategories />,
   },
   {
     path: "/card/page-3",

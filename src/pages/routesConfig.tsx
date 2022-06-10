@@ -32,12 +32,12 @@ const routesConfig: RouterConfigData[] = [
         url: "/card/slider-settings",
       },
       {
-        id: "page-2",
-        title: "Page 2",
-        messageId: "sidebar.card.page2",
+        id: "popular-categories",
+        title: "Popular Categories",
+        messageId: "sidebar.card.popularCategories",
         type: "item",
         icon: <BiAlignLeft />,
-        url: "/card/page-2",
+        url: "/card/popular-categories",
       },
       {
         id: "page-3",
