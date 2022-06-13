@@ -9,97 +9,53 @@ import objectToFormData from "./../../../../utils/api/object-to-form-data";
 import { getDotEnvConfiguration } from "../../../../config";
 
 import AppDialog from "@crema/core/AppDialog";
-import AddSlideForm from "./slider-form";
-import { SliderData } from "../../../../types/models/SliderSettings";
-import { onAddNewSlide } from "../../../../redux/actions";
-import { SLIDER_IMAGE_PLACEHOLDER } from "../../../../config/common/slider-image";
+import MemberForm from "./member-form";
+import { TeamMemberData } from "../../../../types/models/TeamSettings";
+import { MEMBER_IMAGE_PLACEHOLDER } from "../../../../config/common/member-image";
 import ImageCropModal from "../../../../shared/image-crop-modal";
 
-interface AddNewSlideProps {
-  isAddNewSlideOpen: boolean;
+interface AddEditMemberProps {
+  isAddEditMemberOpen: boolean;
   isEdit: boolean;
-  sliderId: number | undefined;
-  initialSliderData?: SliderData | null;
-  onCloseAddSlide: (data?: any[]) => void;
+  memberId: number | undefined;
+  initialTeamMemberData?: TeamMemberData | null;
+  onCloseAddEditMember: () => void;
 }
 
-const AddNewSlide: React.FC<AddNewSlideProps> = ({
-  isAddNewSlideOpen,
+const AddEditMember: React.FC<AddEditMemberProps> = ({
+  isAddEditMemberOpen,
   isEdit,
-  sliderId,
-  initialSliderData,
-  onCloseAddSlide,
+  memberId,
+  initialTeamMemberData,
+  onCloseAddEditMember,
 }) => {
   const { messages } = useIntl();
   const dispatch = useDispatch();
+
   const validationSchema = yup.object({
     image: yup
       .mixed()
       .test("required", "", () => !!imageAsFile || isEdit),
-    title: yup
+    name: yup
       .string()
+      .required(String(
+        messages["common.validation.requiredField"]))
       .max(100,
         (String([
           messages["common.validation.maxLengthFirstPart"],
           100,
           messages["common.validation.maxLengthSecondPart"]]
           .join("\u0020")))),
-    description: yup
+    position: yup
       .string()
-      .max(500,
+      .required(String(
+        messages["common.validation.requiredField"]))
+      .max(100,
         (String([
           messages["common.validation.maxLengthFirstPart"],
-          500,
-          messages["common.validation.maxLengthSecondPart"]]
-          .join("\u0020")))),
-    button_1_name: yup
-      .string()
-      .max(30,
-        (String([
-          messages["common.validation.maxLengthFirstPart"],
-          30,
+          100,
           messages["common.validation.maxLengthSecondPart"]]
           .join("\u0020"))))
-      .test("button_1_name", String(
-        messages["sliderSettings.form.validation.buttonIsReqired"]),
-        (value: string, schema) =>
-          !(!!schema.parent.button_1_action && !value)),
-    button_1_action: yup
-      .string()
-      .max(500,
-        (String([
-          messages["common.validation.maxLengthFirstPart"],
-          500,
-          messages["common.validation.maxLengthSecondPart"]]
-          .join("\u0020"))))
-      .test("button_1_action", String(
-        messages["sliderSettings.form.validation.actionIsReqired"]),
-        (value: string, schema) =>
-          !(!!schema.parent.button_1_name && !value)),
-    button_2_name: yup
-      .string()
-      .max(30,
-        (String([
-          messages["common.validation.maxLengthFirstPart"],
-          30,
-          messages["common.validation.maxLengthSecondPart"]]
-          .join("\u0020"))))
-      .test("button_2_name", String(
-        messages["sliderSettings.form.validation.buttonIsReqired"]),
-        (value: string, schema) =>
-          !(!!schema.parent.button_2_action && !value)),
-    button_2_action: yup
-      .string()
-      .max(500,
-        (String([
-          messages["common.validation.maxLengthFirstPart"],
-          500,
-          messages["common.validation.maxLengthSecondPart"]]
-          .join("\u0020"))))
-      .test("button_2_action", String(
-        messages["sliderSettings.form.validation.actionIsReqired"]),
-        (value: string, schema) =>
-          !(!!schema.parent.button_2_name && !value)),
   });
 
   const [showCropModal, setShowCropModal] = useState<boolean>(false);
@@ -109,16 +65,16 @@ const AddNewSlide: React.FC<AddNewSlideProps> = ({
   const [imageUrl, setImageUrl] = useState<string | undefined>(undefined);
   const [imageAsFile, saveImageAsFile] = useState<File | null>(null);
   const [previewImage, setPreviewImage] = useState(
-    isEdit && initialSliderData && initialSliderData.image !== "" ?
-      baseUrl.concat(initialSliderData.image) :
-      SLIDER_IMAGE_PLACEHOLDER); // TODO handle this to execute only once (first time rendered) somehow -istevanovic
+    isEdit && initialTeamMemberData && initialTeamMemberData.image !== "" ?
+      baseUrl.concat(initialTeamMemberData.image) :
+      MEMBER_IMAGE_PLACEHOLDER); // TODO handle this to execute only once (first time rendered) somehow -istevanovic
   useEffect(() => {
     if (isEdit)
       setPreviewImage(
-        initialSliderData && initialSliderData.image ?
-          baseUrl.concat(initialSliderData.image) :
-          SLIDER_IMAGE_PLACEHOLDER);
-  }, [isEdit, initialSliderData, baseUrl]);
+        initialTeamMemberData && initialTeamMemberData.image ?
+          baseUrl.concat(initialTeamMemberData.image) :
+          MEMBER_IMAGE_PLACEHOLDER);
+  }, [isEdit, initialTeamMemberData, baseUrl]);
 
   const setImageField = (file: File | undefined) => {
     if (file && typeof file.name === 'undefined') {
@@ -145,8 +101,8 @@ const AddNewSlide: React.FC<AddNewSlideProps> = ({
     }
     setImageUrl(undefined);
     saveImageAsFile(null);
-    setPreviewImage(SLIDER_IMAGE_PLACEHOLDER);
-    onCloseAddSlide();
+    setPreviewImage(MEMBER_IMAGE_PLACEHOLDER);
+    onCloseAddEditMember();
   };
 
   return (
@@ -157,21 +113,21 @@ const AddNewSlide: React.FC<AddNewSlideProps> = ({
         setShow={setShowCropModal}
         setShowParent={setIsParentModalVisible}
         setImageField={setImageField}
-        cropAspect={147 / 61}// For container dimension on Emissary app - 1176 x 488 px
+        cropAspect={1}// For container dimension on Emissary app - 328 x 328 px
       />
       <AppDialog
         dividers
         maxWidth="md"
-        height="590px"
-        width="800px"
-        open={isAddNewSlideOpen && isParentModalVisible}
+        height="480px"
+        width="600px"
+        open={isAddEditMemberOpen && isParentModalVisible}
         onClose={resetAllValues}
-        title={<IntlMessages id="sliderSettings.form.addEditTitle" />}
+        title={<IntlMessages id="teamSettings.form.addEditTitle" />}
       >
         <Formik
           validateOnChange={true}
           enableReinitialize={true}
-          initialValues={initialSliderData} // TODO handle when opening Cropper due to setShowParent on Crop Component
+          initialValues={initialTeamMemberData} // TODO handle when opening Cropper due to setShowParent on Crop Component
           validationSchema={validationSchema}
           onSubmit={(data, { setSubmitting, resetForm }) => {
             setSubmitting(true);
@@ -182,17 +138,17 @@ const AddNewSlide: React.FC<AddNewSlideProps> = ({
                 _method: "PUT"
               });
               jwtAxios
-                .post(`/admin/sliders/${String(sliderId)}`, formData)
+                .post(`/admin/team/${String(memberId)}`, formData)
                 .then((response) => {
                   if (response.status === 200) {
                     setSubmitting(false);
-                    onCloseAddSlide(response.data.data);
+                    onCloseAddEditMember();
                   } else {
-                    console.error("Update slide");
+                    console.error("Update member");
                   }
                 })
                 .catch((error) => {
-                  console.error("Update slide", error);
+                  console.error("Update member", error);
                 });
             } else {
               let formData = objectToFormData({
@@ -200,26 +156,26 @@ const AddNewSlide: React.FC<AddNewSlideProps> = ({
                 image: imageAsFile
               });
               jwtAxios
-                .post("/admin/sliders", formData)
+                .post("/admin/team", formData)
                 .then((response) => {
                   if (response.status === 200) {
                     setSubmitting(false);
-                    onCloseAddSlide(response.data.data);
+                    onCloseAddEditMember();
                   } else {
-                    console.error("Update slide");
+                    console.error("Update member");
                   }
                 })
                 .catch((error) => {
-                  console.error("Update slide", error);
+                  console.error("Update member", error);
                 });
             }
-            onCloseAddSlide();
+            onCloseAddEditMember();
             resetAllValues();
             resetForm();
           }}
         >
           {({ isSubmitting, values }) => (
-            <AddSlideForm
+            <MemberForm
               values={values}
               imageUrl={previewImage}
               startImageCrop={startImageCrop}
@@ -232,4 +188,4 @@ const AddNewSlide: React.FC<AddNewSlideProps> = ({
   );
 };
 
-export default AddNewSlide;
+export default AddEditMember;

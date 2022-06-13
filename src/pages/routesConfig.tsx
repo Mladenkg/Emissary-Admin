@@ -72,12 +72,12 @@ const routesConfig: RouterConfigData[] = [
         url: "/card/page-6",
       },
       {
-        id: "page-7",
-        title: "Page 7",
-        messageId: "sidebar.card.page7",
+        id: "team-settings",
+        title: "Team Settings",
+        messageId: "sidebar.card.teamSettings",
         type: "item",
         icon: <BiAlignLeft />,
-        url: "/card/page-7",
+        url: "/card/team-settings",
       },
       {
         id: "page-8",

@@ -1,9 +1,5 @@
 import axios from "axios";
 
-//TODO remove two lines below -istevanovic
-console.log(process.env.NODE_ENV);
-console.log(process.env.REACT_APP_API);
-
 const jwtAxios = axios.create({
   baseURL: process.env.REACT_APP_API,
   headers: {

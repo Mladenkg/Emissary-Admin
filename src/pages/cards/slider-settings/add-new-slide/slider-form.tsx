@@ -75,13 +75,11 @@ const SliderForm: React.FC<SliderFormProps> = ({
   const { getRootProps, getInputProps } = useDropzone({
     accept: ACCEPTABLE_IMAGE_FORMATS,
     maxSize: MAX_IMAGE_SIZE, // TODO handle after cropping -istevanovic
+    minSize: 1,
+    multiple: false,
     onDrop: (acceptedFiles) => {
-      if (acceptedFiles && acceptedFiles.length) {
+      if (acceptedFiles && acceptedFiles.length === 1)
         startImageCrop(acceptedFiles[0]);
-      }
-      else {
-        //warrning for image problems
-      }
     }
   });
 
@@ -104,7 +102,7 @@ const SliderForm: React.FC<SliderFormProps> = ({
                     <CardMedia
                       sx={{
                         width: 294,
-                        height: 122,
+                        height: 122
                       }}
                       component="img"
                       image={imageUrl}
@@ -118,7 +116,12 @@ const SliderForm: React.FC<SliderFormProps> = ({
               </div>
             </HeaderWrapper>
             <Box
-              sx={{ pl: 16, pb: 3, mt: -5, color: "grey.400" }}>
+              sx={{
+                color: (theme) => theme.palette.grey[500],
+                mt: -5,
+                pb: 3,
+                pl: 5
+              }}>
               {messages["sliderSettings.form.acceptableImagesMsg"] as string}
             </Box>
           </Grid>

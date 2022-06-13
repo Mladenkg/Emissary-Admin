@@ -4,7 +4,7 @@ import { Form } from "formik";
 import CardMedia from "@mui/material/CardMedia";
 import AddAPhotoIcon from "@mui/icons-material/AddAPhoto";
 import { useDropzone } from "react-dropzone";
-import { ACCEPTABLE_CATEGORY_IMAGE_FORMATS, MAX_CATEGORY_IMAGE_SIZE } from "../../../../config/common/category-image";
+import { ACCEPTABLE_MEMBER_IMAGE_FORMATS, MAX_MEMBER_IMAGE_SIZE } from "../../../../config/common/member-image";
 import { useIntl } from "react-intl";
 import AppTextField from "@crema/core/AppFormComponents/AppTextField";
 import { Fonts } from "../../../../shared/constants/AppEnums";
@@ -54,14 +54,14 @@ const AvatarViewWrapper = styled("div")(({ theme }) => {
   };
 });
 
-interface CategoryFormProps {
+interface MemberFormProps {
   values: any;
   imageUrl: string,
   startImageCrop: (image: File | undefined) => void;
   isSubmitting: boolean;
 }
 
-const CategoryForm: React.FC<CategoryFormProps> = ({
+const MemberForm: React.FC<MemberFormProps> = ({
   values,
   imageUrl,
   startImageCrop,
@@ -71,8 +71,8 @@ const CategoryForm: React.FC<CategoryFormProps> = ({
   const { messages } = useIntl();
 
   const { getRootProps, getInputProps } = useDropzone({
-    accept: ACCEPTABLE_CATEGORY_IMAGE_FORMATS,
-    maxSize: MAX_CATEGORY_IMAGE_SIZE, // TODO handle after cropping -istevanovic
+    accept: ACCEPTABLE_MEMBER_IMAGE_FORMATS,
+    maxSize: MAX_MEMBER_IMAGE_SIZE, // TODO handle after cropping -istevanovic
     minSize: 1,
     multiple: false,
     onDrop: (acceptedFiles) => {
@@ -120,30 +120,30 @@ const CategoryForm: React.FC<CategoryFormProps> = ({
               pl: 0,
               textAlign: "center"
             }}>
-            {messages["popularCategories.form.acceptableImagesMsg"] as string}
+            {messages["teamSettings.form.acceptableImagesMsg"] as string}
           </Box>
         </Box>
         <Box sx={{ pb: 5, pt: 0 }}>
           <AppTextField
-            name="title"
+            name="name"
             sx={{
               width: "100%",
               fontWeight: Fonts.LIGHT,
             }}
             variant="outlined"
-            label={messages["popularCategories.form.categoryTitle"] as string}
+            label={messages["teamSettings.form.memberName"] as string}
           />
         </Box>
         <Box sx={{ pb: 5, pt: 0 }}>
           <AppTextField
-            name="action"
+            name="position"
             sx={{
               width: "100%",
               backgroundColor: "background.paper",
               color: "text.primary",
             }}
             variant="outlined"
-            label={messages["popularCategories.form.categoryAction"] as string} />
+            label={messages["teamSettings.form.memberPosition"] as string} />
         </Box>
         <div style={{ textAlign: "right" }}>
           <Button
@@ -163,4 +163,4 @@ const CategoryForm: React.FC<CategoryFormProps> = ({
   );
 };
 
-export default CategoryForm;
+export default MemberForm;

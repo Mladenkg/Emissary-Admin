@@ -32,10 +32,10 @@ const EditCategory: React.FC<EditCategoryProps> = ({
       .string()
       .required(String(
         messages["common.validation.requiredField"]))
-      .max(100,
+      .max(30,
         (String([
           messages["common.validation.maxLengthFirstPart"],
-          100,
+          30,
           messages["common.validation.maxLengthSecondPart"]]
           .join("\u0020")))),
     action: yup
@@ -84,12 +84,14 @@ const EditCategory: React.FC<EditCategoryProps> = ({
 
 
   const resetAllValues = () => {
-    if (previewImage) {
+    if (imageUrl) {
       URL.revokeObjectURL(imageUrl);
     }
     if (previewImage) {
-      URL.revokeObjectURL(imageUrl);
+      URL.revokeObjectURL(previewImage);
     }
+    setImageUrl(undefined);
+    saveImageAsFile(null);
     setPreviewImage(CATEGORY_IMAGE_PLACEHOLDER);
     onCloseEditCategory();
   };
@@ -102,13 +104,13 @@ const EditCategory: React.FC<EditCategoryProps> = ({
         setShow={setShowCropModal}
         setShowParent={setIsParentModalVisible}
         setImageField={setImageField}
-        cropAspect={1}// container dimension on Emissary app - 356 x 356 px
+        cropAspect={1}// For container dimension on Emissary app - 356 x 356 px
       />
       <AppDialog
         dividers
         maxWidth="md"
         height="480px"
-        width="700px"
+        width="600px"
         open={isEditCategoryOpen && isParentModalVisible}
         onClose={resetAllValues}
         title={<IntlMessages id="popularCategories.form.editTitle" />}
