@@ -1,0 +1,117 @@
+.tableContainer {
+  height: 60vh;
+  overflow-y: scroll;
+  border-radius: 4px;
+  line-height: 1.43;
+  color: rgb(17, 24, 39);
+  font-size: 12px;
+  border: 1px solid rgb(224, 224, 224);
+}
+
+.table {
+  border-collapse: separate;
+  border-spacing: 0;
+  table-layout: fixed;
+  width: 100%;
+  min-width: 500px;
+  overflow-x: auto;
+}
+
+.actionWidth {
+  width: 50px;
+}
+
+.cursorPointer {
+  cursor: pointer;
+}
+
+.thead {
+  z-index: 100;
+  position: sticky;
+  top: 0;
+  margin: 0;
+  background-color: #f4f7fe;
+}
+
+.thead th {
+  font-weight: 500;
+  border-bottom: 1px solid rgb(224, 224, 224);
+}
+
+.thead th:not(:last-child)::after {
+  content: "";
+  border-right: 2px solid #e0e0e0;
+  height: 1rem;
+  position: absolute;
+  top: 50%;
+  right: 0;
+  transform: translate(0, -50%);
+}
+
+.table td,
+.table th {
+  border-bottom: 1px solid rgb(224, 224, 224);
+}
+
+.thead th,
+.tbody td {
+  position: relative;
+  text-align: left;
+  padding: 10px;
+}
+
+.tbody tr:hover {
+  background-color: rgba(0, 0, 0, 0.04);
+}
+
+.variationsExpandedTd {
+  padding-bottom: 0 !important;
+}
+
+.variationsExpandItem {
+  display: flex;
+  margin: -10px -10px 10px -10px;
+  padding: 10px;
+}
+
+.variationsExpandItem:last-child {
+  margin-bottom: 0;
+}
+
+.variationsExpandItem:hover {
+  background-color: rgba(0, 0, 0, 0.06);
+}
+
+.variationsNameSku {
+  position: relative;
+}
+
+.variationsExpandItem:not(:last-child) .variationsNameSku::after {
+  content: "";
+  border-bottom: 1px solid #e0e0e0;
+  width: 1rem;
+  position: absolute;
+  bottom: -10px;
+  left: 0;
+}
+
+.variationsNameSku {
+  margin-left: 0.5rem;
+}
+
+.variationsAttribute span:not(:last-child) {
+  margin-right: 0.5em;
+}
+
+.moveButton:disabled {
+  pointer-events: unset;
+  cursor: not-allowed;
+}
+
+.moveButton:disabled svg {
+  opacity: 50%;
+}
+
+.capitalize {
+  text-transform: capitalize;
+}

@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import { useAsyncDebounce } from "react-table";
+import TextField from "@mui/material/TextField";
 
 export function GlobalFilter({ globalFilter, setGlobalFilter }) {
   const [value, setValue] = useState(globalFilter);
@@ -9,40 +10,29 @@ export function GlobalFilter({ globalFilter, setGlobalFilter }) {
   }, 200);
 
   return (
-    <div>
-      <input
-        value={value || ""}
-        onChange={(event) => {
-          setValue(event.target.value);
-          onChange(event.target.value);
-        }}
-        placeholder="Enter value"
-        className="w-25"
-        style={{
-          fontSize: "0.9rem",
-          margin: "0px",
-          display: "inline",
-        }}
-      />
-    </div>
+    <TextField
+      // label="Standard"
+      variant="standard"
+      placeholder="Search"
+      value={value || ""}
+      onChange={(event) => {
+        setValue(event.target.value);
+        onChange(event.target.value);
+      }}
+    />
   );
 }
 
-export function DefaultColumnFilter({
-  column: {
-    filterValue,
-    preFilteredRows: { length },
-    setFilter,
-  },
-}) {
+export function DefaultColumnFilter({ column: { filterValue, setFilter } }) {
   return (
-    <input
+    <TextField
+      // label="Standard"
+      variant="standard"
       value={filterValue || ""}
       onChange={(event) => {
         setFilter(event.target.value || undefined);
       }}
-      placeholder={"Enter value"}
-      style={{ width: "100px", marginTop: "5px" }}
+      placeholder="Search"
     />
   );
 }

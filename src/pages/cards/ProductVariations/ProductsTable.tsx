@@ -1,96 +1,109 @@
 import { useMemo } from "react";
 import { useTable, useFilters } from "react-table";
-import {
-  Table,
-  TableHead,
-  TableBody,
-  TableRow,
-  TableCell,
-  Button,
-} from "@mui/material";
 import { DefaultColumnFilter } from "./Filters";
+import IconButton from "@mui/material/IconButton";
 
-import "./styles.css";
+import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
+import styles from "./styles.module.css";
 
-export default function ProductsTable({ data, onProductSelect }) {
+export default function ProductsTable({
+  data,
+  onProductSelect,
+  isMoveDisabled,
+}) {
   const columns = useMemo(
     () => [
       {
         accessor: "sku",
-        Header: "Sku",
+        Header: "SKU",
       },
       {
         accessor: "name",
         Header: "Name",
       },
       {
-        Header: "Actions",
-        Cell: ({ row }) => (
-          <Button
-            onClick={() => {
-              onProductSelect(row.original);
-            }}
-          >
-            &minus;&gt;
-          </Button>
-        ),
+        id: "attributes",
+        Header: "Attributes",
+        accessor: (row) => {
+          let combined = "";
+          row.attributes.forEach(({ value }) => {
+            combined += `${value} `;
+          });
+          return combined;
+        },
+        Cell: ({ row }) =>
+          row.original.attributes.map(({ name, value }) => (
+            <div key={name}>
+              <span className={styles.capitalize}>{name}:</span> {value}
+            </div>
+          )),
       },
     ],
-    [onProductSelect]
+    []
   );
 
-  const {
-    getTableProps,
-    getTableBodyProps,
-    headerGroups,
-    rows,
-    state,
-    prepareRow,
-  } = useTable(
-    {
-      columns,
-      data,
-      defaultColumn: { Filter: DefaultColumnFilter },
-      autoResetFilters: false,
-      autoResetGlobalFilter: false,
-    },
-    useFilters
-  );
+  const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
+    useTable(
+      {
+        columns,
+        data,
+        defaultColumn: { Filter: DefaultColumnFilter },
+        autoResetFilters: false,
+        autoResetGlobalFilter: false,
+      },
+      useFilters
+    );
 
   return (
-    <div className="tableContainer">
-      <Table {...getTableProps()}>
-        <TableHead className="tableHead">
+    <div className={styles.tableContainer}>
+      <table {...getTableProps()} className={styles.table}>
+        <thead className={styles.thead}>
           {headerGroups.map((headerGroup) => (
-            <TableRow {...headerGroup.getHeaderGroupProps()}>
+            <tr {...headerGroup.getHeaderGroupProps()}>
               {headerGroup.headers.map((column) => (
-                <TableCell {...column.getHeaderProps()}>
+                <th {...column.getHeaderProps()}>
                   {column.render("Header")}
                   {column.canFilter ? (
                     <div>{column.render("Filter")}</div>
                   ) : null}
-                </TableCell>
+                </th>
               ))}
-            </TableRow>
+              <th className={styles.actionWidth}></th>
+            </tr>
           ))}
-        </TableHead>
-        <TableBody {...getTableBodyProps()}>
+        </thead>
+        <tbody {...getTableBodyProps()} className={styles.tbody}>
           {rows.map((row) => {
             prepareRow(row);
             return (
-              <TableRow {...row.getRowProps()}>
+              <tr {...row.getRowProps()}>
                 {row.cells.map((cell) => {
                   return (
-                    <TableCell {...cell.getCellProps()}>
-                      {cell.render("Cell")}
-                    </TableCell>
+                    <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
                   );
                 })}
-              </TableRow>
+
+                <td className={styles.actionWidth}>
+                  <IconButton
+                    className={styles.moveButton}
+                    onClick={() => {
+                      onProductSelect(row.original);
+                    }}
+                    disabled={isMoveDisabled}
+                  >
+                    <ArrowForwardIosIcon
+                      sx={{
+                        fontSize: (theme) => theme.typography.button.fontSize,
+                        color: (theme) => theme.palette.primary.main,
+                      }}
+                    />
+                  </IconButton>
+                </td>
+              </tr>
             );
           })}
-        </TableBody>
-      </Table>
+        </tbody>
+      </table>
     </div>
   );
 }

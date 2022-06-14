@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useMemo } from "react";
 import {
   useTable,
   useFilters,
@@ -6,17 +6,11 @@ import {
   Row,
   IdType,
 } from "react-table";
-import {
-  Table,
-  TableHead,
-  TableBody,
-  TableRow,
-  TableCell,
-  Button,
-} from "@mui/material";
 import { DefaultColumnFilter } from "./Filters";
+import IconButton from "@mui/material/IconButton";
 
-import "./styles.css";
+import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
+import styles from "./styles.module.css";
 
 export default function VariationsTable({
   data,
@@ -48,15 +42,16 @@ export default function VariationsTable({
         // Filter: SelectColumnFilter,
       },
       {
+        Header: "Products",
         accessor: ({ products }) => {
           return products.map(({ sku }) => sku).join(", ");
         },
         filter: variationProductsFilter,
-        Header: "Products",
       },
     ],
     []
   );
+
   const globalFilter = useCallback(
     (rows: Row<any>[], ids: IdType<any>[], query: string) => {
       const values = query
@@ -82,9 +77,7 @@ export default function VariationsTable({
     getTableBodyProps,
     headerGroups,
     rows,
-    state,
     visibleColumns,
-    setGlobalFilter,
     prepareRow,
   } = useTable(
     {
@@ -100,9 +93,9 @@ export default function VariationsTable({
   );
 
   return (
-    <div className="tableContainer">
-      <Table {...getTableProps()}>
-        <TableHead className="tableHead">
+    <div className={styles.tableContainer}>
+      <table {...getTableProps()} className={styles.table}>
+        <thead className={styles.thead}>
           {/* <TableRow>
           <TableCell
             colSpan={visibleColumns.length}
@@ -114,62 +107,93 @@ export default function VariationsTable({
           </TableCell>
         </TableRow> */}
           {headerGroups.map((headerGroup) => (
-            <TableRow {...headerGroup.getHeaderGroupProps()}>
+            <tr {...headerGroup.getHeaderGroupProps()}>
               {headerGroup.headers.map((column) => (
-                <TableCell {...column.getHeaderProps()}>
+                <th {...column.getHeaderProps()}>
                   {column.render("Header")}
                   {column.canFilter ? (
                     <div>{column.render("Filter")}</div>
                   ) : null}
-                </TableCell>
+                </th>
               ))}
-            </TableRow>
+            </tr>
           ))}
-        </TableHead>
-        <TableBody {...getTableBodyProps()}>
+        </thead>
+        <tbody {...getTableBodyProps()} className={styles.tbody}>
           {rows.map((row) => {
             prepareRow(row);
             const { id, products } = row.original;
             const expanded =
               !!selectedVariationId && selectedVariationId === id;
             return [
-              <TableRow {...row.getRowProps()} onClick={() => onRowClick(id)}>
+              <tr
+                {...row.getRowProps()}
+                className={styles.cursorPointer}
+                onClick={() => onRowClick(id)}
+              >
                 {row.cells.map((cell) => {
                   return (
-                    <TableCell {...cell.getCellProps()}>
-                      {cell.render("Cell")}
-                    </TableCell>
+                    <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
                   );
                 })}
-              </TableRow>,
+              </tr>,
               expanded && (
-                <TableRow key={`products-${id}`}>
-                  <TableCell
+                <tr key={`products-${id}`}>
+                  <td
                     colSpan={visibleColumns.length}
-                    style={{
-                      backgroundColor: "#fafafa",
-                    }}
+                    className={styles.variationsExpandedTd}
                   >
-                    {products.map((product) => (
-                      <div key={product.id}>
-                        <Button
-                          onClick={() => {
-                            onProductDeselect(product);
-                          }}
+                    {products.length === 0 ? (
+                      <div className={styles.variationsExpandItem}>- Empty</div>
+                    ) : (
+                      products.map((product) => (
+                        <div
+                          key={product.id}
+                          className={styles.variationsExpandItem}
                         >
-                          &lt;&minus;
-                        </Button>
-                        <span>{product.name}</span>
-                        <span>{product.sku}</span>
-                      </div>
-                    ))}
-                  </TableCell>
-                </TableRow>
+                          <div>
+                            <IconButton
+                              onClick={() => {
+                                onProductDeselect(product);
+                              }}
+                            >
+                              <ArrowBackIosNewIcon
+                                sx={{
+                                  fontSize: (theme) =>
+                                    theme.typography.button.fontSize,
+                                  color: (theme) => theme.palette.primary.main,
+                                }}
+                              />
+                            </IconButton>
+                          </div>
+
+                          <div className={styles.variationsNameSku}>
+                            <div title="Name">{product.name}</div>
+                            <div title="SKU">{product.sku}</div>
+                            <div
+                              title="Attributes"
+                              className={styles.variationsAttribute}
+                            >
+                              {product.attributes.map(({ name, value }) => (
+                                <span key={name}>
+                                  <span className={styles.capitalize}>
+                                    {name}:
+                                  </span>{" "}
+                                  {value}
+                                </span>
+                              ))}
+                            </div>
+                          </div>
+                        </div>
+                      ))
+                    )}
+                  </td>
+                </tr>
               ),
             ];
           })}
-        </TableBody>
-      </Table>
+        </tbody>
+      </table>
     </div>
   );
 }

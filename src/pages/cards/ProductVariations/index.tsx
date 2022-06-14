@@ -3,10 +3,12 @@ import { Box, Grid, TextField } from "@mui/material";
 
 import VariationsTable from "./VariationsTable";
 import ProductsTable from "./ProductsTable";
+import AppComponentHeader from "@crema/core/AppComponentHeader";
+import AppGridContainer from "@crema/core/AppGridContainer";
+import { useIntl } from "react-intl";
 
 // MODAL
 
-import * as React from "react";
 import Button from "@mui/material/Button";
 import { styled } from "@mui/material/styles";
 import Dialog from "@mui/material/Dialog";
@@ -59,6 +61,8 @@ const BootstrapDialogTitle = (props: DialogTitleProps) => {
 // ENDMODAL
 
 function ProductVariations() {
+  const { messages } = useIntl();
+
   const [products, setProducts] = useState([]);
   const [variations, setVariations] = useState([]);
   const [selectedVariationId, setSelectedVariationId] = useState("");
@@ -173,12 +177,20 @@ function ProductVariations() {
   };
 
   return (
-    <Box>
-      <Grid container spacing={24}>
-        <Grid item xs={6}>
+    <>
+      <AppComponentHeader
+        description={
+          messages["productVariations.productVariationsDescription"] as string
+        }
+        title={messages["productVariations.productVariationsTitle"] as string}
+      />
+
+      <AppGridContainer>
+        <Grid item xs={12}>
           <Button variant="outlined" onClick={handleOpen}>
             Create Variation
           </Button>
+
           <BootstrapDialog
             onClose={handleClose}
             aria-labelledby="customized-dialog-title"
@@ -188,13 +200,13 @@ function ProductVariations() {
               id="customized-dialog-title"
               onClose={handleClose}
             >
-              Modal title
+              Create Variation
             </BootstrapDialogTitle>
             <DialogContent dividers>
               <Box
                 component="form"
                 sx={{
-                  "& .MuiTextField-root": { m: 1, width: "25ch" },
+                  "& .MuiTextField-root": { m: 1, width: 300 },
                 }}
                 noValidate
                 autoComplete="off"
@@ -220,11 +232,15 @@ function ProductVariations() {
             </DialogActions>
           </BootstrapDialog>
         </Grid>
-      </Grid>
-      <Grid container spacing={24}>
+
         <Grid item xs={6}>
-          <ProductsTable data={products} onProductSelect={onProductSelect} />
+          <ProductsTable
+            data={products}
+            onProductSelect={onProductSelect}
+            isMoveDisabled={selectedVariationId === ""}
+          />
         </Grid>
+
         <Grid item xs={6}>
           <VariationsTable
             data={variations}
@@ -233,8 +249,8 @@ function ProductVariations() {
             onProductDeselect={onProductDeselect}
           />
         </Grid>
-      </Grid>
-    </Box>
+      </AppGridContainer>
+    </>
   );
 }
 

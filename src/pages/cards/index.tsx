@@ -7,7 +7,7 @@ const Page4 = React.lazy(() => import("./Page4"));
 const Page5 = React.lazy(() => import("./Page5"));
 const Page6 = React.lazy(() => import("./Page6"));
 const TeamSettings = React.lazy(() => import("./team-settings"));
-const Page8 = React.lazy(() => import("./Page8"));
+const MegaMenuSettings = React.lazy(() => import("./mega-menu-settings"));
 const Page9 = React.lazy(() => import("./Page9"));
 const Page10 = React.lazy(() => import("./Page10"));
 const Page11 = React.lazy(() => import("./Page11"));
@@ -46,8 +46,8 @@ export const cardPagesConfigs = [
     element: <TeamSettings />,
   },
   {
-    path: "/card/page-8",
-    element: <Page8 />,
+    path: "/card/mega-menu-settings",
+    element: <MegaMenuSettings />,
   },
   {
     path: "/card/page-9",

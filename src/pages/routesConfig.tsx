@@ -80,12 +80,12 @@ const routesConfig: RouterConfigData[] = [
         url: "/card/team-settings",
       },
       {
-        id: "page-8",
+        id: "mega-menu-settings",
         title: "Page 8",
-        messageId: "sidebar.card.page8",
+        messageId: "sidebar.card.megaMenuSettings",
         type: "item",
         icon: <BiAlignLeft />,
-        url: "/card/page-8",
+        url: "/card/mega-menu-settings",
       },
       {
         id: "page-9",
